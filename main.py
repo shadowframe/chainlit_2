@@ -10,7 +10,7 @@ async def on_chat_start():
     await cl.Message(
         content="Hello there, I am Gemma. How can I help you?", elements=elements
     ).send()
-    model = Ollama(model="mistral")
+    model = Ollama(model="phi3.5:latest", base_url="http://localhost:11434")
     prompt = ChatPromptTemplate.from_messages(
         [
             (
@@ -26,13 +26,12 @@ async def on_chat_start():
 
 @cl.on_message
 async def on_message(message: cl.Message):
-
     chain = cl.user_session.get("chain")
 
     msg = cl.Message(content="")
 
     async for chunk in chain.astream(
-        {"question": message.content},
+            {"question": message.content},
     ):
         await msg.stream_token(chunk)
 
